@@ -19,6 +19,7 @@
     "build": "webpack",
     "client": "webpack --watch",
     "server": "nodemon server.js",
-    "start": "concurrently \"yarn server\" \"yarn client\""
+    "dev": "concurrently \"yarn server\" \"yarn client\"",
+    "start": "node server.js"
   }
 }
