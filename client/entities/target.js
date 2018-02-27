@@ -132,7 +132,7 @@ class TargetManager {
     this.targets.push(t);
   }
   spawnNewTarget(){
-    const speed = 12;
+    const speed = 100;
     const origin = pickPoint(this.bounds);
     const destination = pickPoint(this._inner);
     const move = unitize({

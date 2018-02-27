@@ -569,7 +569,7 @@ var TargetManager = function () {
   }, {
     key: "spawnNewTarget",
     value: function spawnNewTarget() {
-      var speed = 12;
+      var speed = 100;
       var origin = pickPoint(this.bounds);
       var destination = pickPoint(this._inner);
       var move = unitize({
@@ -1032,21 +1032,19 @@ var targetManager = new _target.TargetManager();
 function entered() {
   var world = this.manager.systems.world;
   var root = this.manager.systems.sceneGraph.root;
+  world.targets = [];
 
-  // const t = new Target({x:40,y:70},30);
-  var t = targetManager.spawnNewTarget();
-  var t1 = targetManager.spawnNewTarget();
-  var t2 = targetManager.spawnNewTarget();
-
-  world.targets = [t, t1, t2];
-
-  world.targets.forEach(function (target) {
-    var node = new _graph.Node(undefined, root);
-    target.sceneNode = node;
-    node.data = target.draw;
+  var timer = this.manager.systems.timerManager.addTimer(function () {
+    var t = targetManager.spawnNewTarget();
+    var node = new _graph.Node(t.draw, root);
+    t.sceneNode = node;
     root.children.push(node);
-  });
+    world.targets.push(t);
+  }, 1000, true);
+
   world.score = 0;
+  // const t = new Target({x:40,y:70},30);
+
 
   targetManager.onhit = function (target) {
     console.log("test");
@@ -1055,6 +1053,7 @@ function entered() {
   };
   targetManager.onmiss = function (target) {
     console.log("miss!");
+    world.score -= 50;
     target.sceneNode.remove();
   };
 }

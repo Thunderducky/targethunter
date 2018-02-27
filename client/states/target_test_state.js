@@ -11,21 +11,19 @@ const targetManager = new TargetManager();
 function entered(){
   const world = this.manager.systems.world;
   const root = this.manager.systems.sceneGraph.root;
+  world.targets = [];
 
-  // const t = new Target({x:40,y:70},30);
-  const t = targetManager.spawnNewTarget();
-  const t1 = targetManager.spawnNewTarget();
-  const t2 = targetManager.spawnNewTarget();
-
-  world.targets = [t,t1,t2];
-
-  world.targets.forEach((target) => {
-    const node = new Node(undefined, root);
-    target.sceneNode = node;
-    node.data = target.draw;
+  const timer = this.manager.systems.timerManager.addTimer(() => {
+    const t = targetManager.spawnNewTarget();
+    const node = new Node(t.draw, root);
+    t.sceneNode = node;
     root.children.push(node);
-  });
+    world.targets.push(t);
+  }, 1000, true);
+
   world.score = 0;
+  // const t = new Target({x:40,y:70},30);
+
 
   targetManager.onhit = (target) => {
     console.log("test");
@@ -34,6 +32,7 @@ function entered(){
   };
   targetManager.onmiss = (target) => {
     console.log("miss!");
+    world.score -= 50;
     target.sceneNode.remove();
   }
 }
